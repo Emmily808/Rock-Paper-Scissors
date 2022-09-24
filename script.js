@@ -1,90 +1,81 @@
 //Create our 3 choices.
-let choices = ['Rock', 'Paper', 'Scissors']
+let possibleChoices = ["rock", "paper", "scissors"];
+// You can just write them all in lower case and lowercase user input (or the opposite)
 
 // Declare the player choice.
-let getPlayerChoice = ()  =>{
-    let userChoice = prompt('Rock, paper o scissors?')
-    return userChoice
-}
+let getPlayerChoice = () => {
+  return prompt("Rock, paper o scissors?");
+};
 
 //Create a function that returns a random choice from the computer.
 let getComputerChoice = () => {
-    let randomChoice = choices[Math.floor(Math.random()*3)]
-    return randomChoice
-}
-
-//Storage the values of the choices in variables.
-let playerSelection = getPlayerChoice()
-let computerSelection = getComputerChoice()
+  return possibleChoices[Math.floor(Math.random() * possibleChoices.length)];
+  // .length would work for every array, you're going to need it in the future
+  // Also you can actually just return it, don't need to use extra memory for this :)
+};
 
 //Declare our counters and ties
-let playerCounter = 0
-let computerCounter = 0
-let ties = 0
+let userPoints = 0;
+let computerPoints = 0;
+let ties = 0;
 
 // Write a function that play a single round.
-let playRound = (computerSelection, playerSelection) =>{
-    
-    //User input: rock
-    if( computerSelection.toUpperCase() === 'ROCK' && playerSelection.toUpperCase() === 'ROCK' ) {
-        ties++
-        return('Hay empate.')
-    } else if (computerSelection.toUpperCase() === 'PAPER' && playerSelection.toUpperCase() === 'ROCK' ) {
-        computerCounter++ 
-        return('Perdiste.')
-    } else if (computerSelection.toUpperCase() === 'SCISSORS' && playerSelection.toUpperCase() === 'ROCK') {
-        playerCounter++
-        return('Ganaste.')
-        
-        //User input: paper
-    } else if ( computerSelection.toUpperCase() === 'ROCK' && playerSelection.toUpperCase() === 'PAPER' ) {
-        playerCounter++
-        return('Ganaste.')
-    } else if (computerSelection.toUpperCase() === 'PAPER' && playerSelection.toUpperCase() === 'PAPER' ) {
-        ties++
-        return('Hay empate.')
-    } else if (computerSelection.toUpperCase() === 'SCISSORS' && playerSelection.toUpperCase() === 'PAPER') {
-        computerCounter++
-        return('Perdiste.')
-        
-        //User input: scissors    
-    }else if ( computerSelection.toUpperCase() === 'ROCK' && playerSelection.toUpperCase() === 'SCISSORS' ) {
-        computerCounter++
-        return('Perdiste.')
-    } else if (computerSelection.toUpperCase() === 'PAPER' && playerSelection.toUpperCase() === 'SCISSORS' ) {
-        playerCounter++
-        return('Ganaste.')
-    } else if (computerSelection.toUpperCase() === 'SCISSORS' && playerSelection.toUpperCase() === 'SCISSORS') {
-        ties++
-        return('Hay empate.')
-    }
+let playRound = (computerSelection, playerSelection) => {
+  let computerChooseRock = computerSelection === "rock";
+  let computerChoosePaper = computerSelection === "paper";
+  let computerChooseScissors = computerSelection === "scissors";
+
+  let userChooseRock = playerSelection === "rock";
+  let userChoosePaper = playerSelection === "paper";
+  let userChooseScissors = playerSelection === "scissors";
+
+  let bothChooseRock = computerChooseRock && userChooseRock;
+  let bothChoosePaper = computerChoosePaper && userChoosePaper;
+  let bothChooseScissors = computerChooseScissors && userChooseScissors;
+
+  let userWonTheRound = (computerChooseScissors && userChooseRock) || (computerChooseRock && userChoosePaper) || (computerChoosePaper && userChooseScissors);
+
+  let computerWonTheRound =
+    (computerChoosePaper && userChooseRock) || (computerChooseScissors && userChoosePaper) || (computerChooseRock && userChooseScissors);
+
+  let theresATie = bothChoosePaper || bothChooseRock || bothChooseScissors;
+
+  //   When you have to evaluate a lot of things, break it down into small pieces
+  //   And evaluate separately
+
+  if (userWonTheRound) {
+    userPoints++;
+    return "Ganaste la ronda";
+  } else if (computerWonTheRound) {
+    computerPoints++;
+    return "Perdiste la ronda";
+  } else if (theresATie) {
+    // You can just leave this one as 'else lol'
+    ties++;
+    return "Hay empate";
+  }
+};
+
+let playerSelection;
+let computerSelection;
+
+//Repeat the round until the first user accomplish 3 wins.
+while (computerPoints < 5 && userPoints < 5) {
+  // This way whoever gets to 5 points wins
+  playerSelection = getPlayerChoice();
+  computerSelection = getComputerChoice();
+  console.log(`La compu eligio: ${computerSelection}`);
+  console.log(`Vos elegiste: ${playerSelection}`);
+  console.log(playRound(computerSelection, playerSelection.toLowerCase()));
+
+  console.log("-------"); //make it easier to read :)
+  console.log(`El puntaje es: Computadora ${computerPoints}  Usuario ${userPoints}  Empates ${ties}`);
+  console.log("-------");
+  
+  // You can actually evaluate here
+  if (computerPoints === 5) {
+    console.log("Perdiste el juego mi rey");
+  } else if (userPoints === 5) {
+    console.log("Ganaste el juego crack");
+  }
 }
-
-//Repite the round until the first user accomplish 3 wins.
-for(let i = 0; i<5; i++){
-    playerSelection = getPlayerChoice()
-    computerSelection = getComputerChoice()
-    console.log(`La compu eligio: ${computerSelection}`)
-    console.log(`Vos elegiste: ${playerSelection}`)
-    console.log(playRound(computerSelection, playerSelection))
-}
-
-//Show the final winner and the results
-console.log(`El puntaje es: Computadora ${computerCounter}  Usuario ${playerCounter}  Empates ${ties}`)
-if(computerCounter>playerCounter){
-    console.log('Perdiste')
-}else if(computerCounter<playerCounter){
-    console.log('Ganaste chinchilun!!!')
-}else{
-    console.log('Hay empate')
-}
-
-
-
-//
-
-
-
-
-
-
