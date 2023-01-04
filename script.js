@@ -1,30 +1,61 @@
-//Create our 3 choices.
+alert(
+  `Welcome! To start the game, we need to touch some of the button choices. Who reachs 3 wins first, will be the winner. Let's play!`
+);
+
+// CREATE OUR 3 CHOICES.
 let possibleChoices = ["rock", "paper", "scissors"];
-// You can just write them all in lower case and lowercase user input (or the opposite)
 
-// Declare the player choice.
-let getPlayerChoice = () => {
-  return prompt("Rock, paper o scissors?");
-};
+let rockButton = document.getElementById("rockButton");
+let paperButton = document.getElementById("paperButton");
+let scissorsButton = document.getElementById("scissorsButton");
+let results = document.getElementById("results");
+let userScoreCounter = document.getElementById("userScores");
+let computerScoreCounter = document.getElementById("computerScores");
+let tieScoreCounter = document.getElementById("ties");
 
-//Create a function that returns a random choice from the computer.
-let getComputerChoice = () => {
+//CREATE A FUNCTION THAT RETURNS THE COMPUTER SELECTION.
+let getComputerSelection = () => {
   return possibleChoices[Math.floor(Math.random() * possibleChoices.length)];
-  // .length would work for every array, you're going to need it in the future
-  // Also you can actually just return it, don't need to use extra memory for this :)
 };
+
+//DECLARE THE COMPUTER'S SELECTION AND THE USER'S SELECTION.
+let playerSelection;
+
+//Add the event listeners to the buttons
+rockButton.addEventListener("click", () => {
+  playerSelection = "rock";
+  getComputerSelection();
+  playRound(getComputerSelection(), playerSelection);
+});
+
+paperButton.addEventListener("click", () => {
+  playerSelection = "paper";
+  getComputerSelection();
+  playRound(getComputerSelection(), playerSelection);
+});
+
+scissorsButton.addEventListener("click", () => {
+  playerSelection = "scissors";
+  getComputerSelection();
+  playRound(getComputerSelection(), playerSelection);
+});
 
 //Declare our counters and ties
+
 let userPoints = 0;
 let computerPoints = 0;
 let ties = 0;
+
+// HERE I CREATE THE HTML ELEMENTS FOR THE ACTUAL SCORES
+let userResultMessage = document.createElement("p");
+let computerResultMessage = document.createElement("p");
+let itsATieMessage = document.createElement("p");
 
 // Write a function that play a single round.
 let playRound = (computerSelection, playerSelection) => {
   let computerChooseRock = computerSelection === "rock";
   let computerChoosePaper = computerSelection === "paper";
   let computerChooseScissors = computerSelection === "scissors";
-
   let userChooseRock = playerSelection === "rock";
   let userChoosePaper = playerSelection === "paper";
   let userChooseScissors = playerSelection === "scissors";
@@ -33,49 +64,53 @@ let playRound = (computerSelection, playerSelection) => {
   let bothChoosePaper = computerChoosePaper && userChoosePaper;
   let bothChooseScissors = computerChooseScissors && userChooseScissors;
 
-  let userWonTheRound = (computerChooseScissors && userChooseRock) || (computerChooseRock && userChoosePaper) || (computerChoosePaper && userChooseScissors);
+  let userWonTheRound =
+    (computerChooseScissors && userChooseRock) ||
+    (computerChooseRock && userChoosePaper) ||
+    (computerChoosePaper && userChooseScissors);
 
   let computerWonTheRound =
-    (computerChoosePaper && userChooseRock) || (computerChooseScissors && userChoosePaper) || (computerChooseRock && userChooseScissors);
+    (computerChoosePaper && userChooseRock) ||
+    (computerChooseScissors && userChoosePaper) ||
+    (computerChooseRock && userChooseScissors);
 
   let theresATie = bothChoosePaper || bothChooseRock || bothChooseScissors;
 
-  //   When you have to evaluate a lot of things, break it down into small pieces
-  //   And evaluate separately
-
   if (userWonTheRound) {
     userPoints++;
-    return "Ganaste la ronda";
+    let userResult = document.createElement("p");
+    userResult.textContent = "You win this round!";
+    results.appendChild(userResult);
+    // SHOWING THE SCORING (NOT FINISHED AT ALL)
+    userResultMessage.textContent = `The user have: ${userPoints} wins`;
+    userScoreCounter.appendChild(userResultMessage);
+    ////////////////////////////////////
   } else if (computerWonTheRound) {
     computerPoints++;
-    return "Perdiste la ronda";
+    let computerResult = document.createElement("p");
+    computerResult.textContent = "The computer win the round";
+    results.appendChild(computerResult);
+    // SHOWING THE SCORING (NOT FINISHED AT ALL)
+    computerResultMessage.textContent = `The computer has: ${computerPoints} wins`;
+    computerScoreCounter.appendChild(computerResultMessage);
+    ////////////////////////////////////
   } else if (theresATie) {
     // You can just leave this one as 'else lol'
     ties++;
-    return "Hay empate";
+    let itsATie = document.createElement("p");
+    itsATie.textContent = `It's a tie!`;
+    results.appendChild(itsATie);
+    // SHOWING THE SCORING (NOT FINISHED AT ALL)
+    itsATieMessage.textContent = `Ties: ${ties}`;
+    tieScoreCounter.appendChild(itsATieMessage);
+    ////////////////////////////////////
+  }
+
+  if (userPoints == 3) {
+    alert("You win the game! Congrats!");
+    alert("Press F5 to play again");
+  } else if (computerPoints == 3) {
+    alert("You loose :( try it again...");
+    alert("Press F5 to play again");
   }
 };
-
-let playerSelection;
-let computerSelection;
-
-//Repeat the round until the first user accomplish 3 wins.
-while (computerPoints < 5 && userPoints < 5) {
-  // This way whoever gets to 5 points wins
-  playerSelection = getPlayerChoice();
-  computerSelection = getComputerChoice();
-  console.log(`La compu eligio: ${computerSelection}`);
-  console.log(`Vos elegiste: ${playerSelection}`);
-  console.log(playRound(computerSelection, playerSelection.toLowerCase()));
-
-  console.log("-------"); //make it easier to read :)
-  console.log(`El puntaje es: Computadora ${computerPoints}  Usuario ${userPoints}  Empates ${ties}`);
-  console.log("-------");
-  
-  // You can actually evaluate here
-  if (computerPoints === 5) {
-    console.log("Perdiste el juego mi rey");
-  } else if (userPoints === 5) {
-    console.log("Ganaste el juego crack");
-  }
-}
