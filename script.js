@@ -12,6 +12,7 @@ let results = document.getElementById("results");
 let userScoreCounter = document.getElementById("userScores");
 let computerScoreCounter = document.getElementById("computerScores");
 let tieScoreCounter = document.getElementById("ties");
+let scores = document.getElementById("scores");
 
 //CREATE A FUNCTION THAT RETURNS THE COMPUTER SELECTION.
 let getComputerSelection = () => {
@@ -76,41 +77,71 @@ let playRound = (computerSelection, playerSelection) => {
 
   let theresATie = bothChoosePaper || bothChooseRock || bothChooseScissors;
 
+  let userResult = document.createElement("p");
+  let computerResult = document.createElement("p");
+  let itsATie = document.createElement("p");
+
   if (userWonTheRound) {
-    userPoints++;
-    let userResult = document.createElement("p");
     userResult.textContent = "You win this round!";
     results.appendChild(userResult);
     // SHOWING THE SCORING (NOT FINISHED AT ALL)
+    userPoints++;
     userResultMessage.textContent = `The user have: ${userPoints} wins`;
     userScoreCounter.appendChild(userResultMessage);
     ////////////////////////////////////
   } else if (computerWonTheRound) {
-    computerPoints++;
-    let computerResult = document.createElement("p");
     computerResult.textContent = "The computer win the round";
     results.appendChild(computerResult);
     // SHOWING THE SCORING (NOT FINISHED AT ALL)
+    computerPoints++;
     computerResultMessage.textContent = `The computer has: ${computerPoints} wins`;
     computerScoreCounter.appendChild(computerResultMessage);
     ////////////////////////////////////
   } else if (theresATie) {
     // You can just leave this one as 'else lol'
-    ties++;
-    let itsATie = document.createElement("p");
     itsATie.textContent = `It's a tie!`;
     results.appendChild(itsATie);
     // SHOWING THE SCORING (NOT FINISHED AT ALL)
+    ties++;
     itsATieMessage.textContent = `Ties: ${ties}`;
     tieScoreCounter.appendChild(itsATieMessage);
     ////////////////////////////////////
   }
 
-  if (userPoints == 3) {
-    alert("You win the game! Congrats!");
-    alert("Press F5 to play again");
-  } else if (computerPoints == 3) {
-    alert("You loose :( try it again...");
-    alert("Press F5 to play again");
+  if(userPoints == 3){
+   alert('You are the winner! Play again!')
+  }else if( computerPoints == 3){
+   alert('You loose! Try again!')
   }
-};
+
+  if (userPoints == 3 || computerPoints == 3) {
+    userPoints = 0;
+    computerPoints = 0;
+    ties = 0;
+    
+    let resultsChilds = results.lastElementChild;
+    let userScoreChilds = userScoreCounter.lastElementChild
+    let computerScoreChilds = computerScoreCounter.lastElementChild
+    let tiesScoreChilds = tieScoreCounter.lastElementChild
+    while(resultsChilds){
+      results.removeChild(resultsChilds);
+      resultsChilds = results.lastElementChild;
+    }
+    
+      while(userScoreChilds){
+        userScoreCounter.removeChild(userScoreChilds)
+        userScoreChilds = userScoreCounter.lastElementChild
+      }
+      
+      while(computerScoreChilds){
+        computerScoreCounter.removeChild(computerScoreChilds)
+        computerScoreChilds = computerScoreCounter.lastElementChild
+      }
+      
+      while(tiesScoreChilds){
+        tieScoreCounter.removeChild(tiesScoreChilds)
+        tiesScoreChilds = tieScoreCounter.lastElementChild
+      }
+    }
+  }
+    
